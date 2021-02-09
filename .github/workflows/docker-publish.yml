@@ -65,11 +65,11 @@ jobs:
       - name: Push image
         run: |
           IMAGE_ID_github=ghcr.io/${{ github.repository }}/$IMAGE_NAME
-          IMAGE_ID_docker=hub.docker.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID_docker=docker.io/${{ github.repository }}/$IMAGE_NAME
 
           # Change all uppercase to lowercase
-          IMAGE_ID_github=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          IMAGE_ID_docker=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          IMAGE_ID_github=$(echo $IMAGE_ID_github | tr '[A-Z]' '[a-z]')
+          IMAGE_ID_docker=$(echo $IMAGE_ID_docker | tr '[A-Z]' '[a-z]')
 
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
