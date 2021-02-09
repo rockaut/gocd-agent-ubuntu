@@ -49,15 +49,22 @@ jobs:
       - name: Build image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
 
-      - name: Log into github registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-      
-      - name: Log into hub.docker registry
-        run: echo "${{ secrets.HUB_DOCKER_AUTH }}" | docker login hub.docker.com -u ${{ secrets.HUB_DOCKER_USER }} --password-stdin
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.HUB_DOCKER_USER }}
+          password: ${{ secrets.HUB_DOCKER_AUTH }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push image
         run: |
-          IMAGE_ID_github=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID_github=ghcr.io/${{ github.repository }}/$IMAGE_NAME
           IMAGE_ID_docker=hub.docker.com/${{ github.repository }}/$IMAGE_NAME
 
           # Change all uppercase to lowercase
